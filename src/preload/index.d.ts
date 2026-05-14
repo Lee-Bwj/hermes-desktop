@@ -1,4 +1,15 @@
-import { ElectronAPI } from "@electron-toolkit/preload";
+import type { AppLocale } from "../shared/i18n/types";
+
+interface ElectronAPI {
+  process: {
+    platform: NodeJS.Platform;
+    versions: {
+      chrome: string;
+      electron: string;
+      node: string;
+    };
+  };
+}
 
 interface InstallStatus {
   installed: boolean;
@@ -18,6 +29,7 @@ interface InstallProgress {
 interface HermesAPI {
   // Installation
   checkInstall: () => Promise<InstallStatus>;
+  verifyInstall: () => Promise<boolean>;
   startInstall: () => Promise<{ success: boolean; error?: string }>;
   onInstallProgress: (
     callback: (progress: InstallProgress) => void,
@@ -30,11 +42,11 @@ interface HermesAPI {
   runHermesUpdate: () => Promise<{ success: boolean; error?: string }>;
 
   // OpenClaw migration
-  checkOpenClaw: () => Promise<{ found: boolean; path: string | null }>; 
+  checkOpenClaw: () => Promise<{ found: boolean; path: string | null }>;
   runClawMigrate: () => Promise<{ success: boolean; error?: string }>;
 
-  getLocale: () => Promise<"en">;
-  setLocale: (locale: "en") => Promise<"en">;
+  getLocale: () => Promise<AppLocale>;
+  setLocale: (locale: AppLocale) => Promise<AppLocale>;
 
   // Configuration (profile-aware)
   getEnv: (profile?: string) => Promise<Record<string, string>>;
@@ -52,19 +64,46 @@ interface HermesAPI {
     profile?: string,
   ) => Promise<boolean>;
 
-  // Connection mode (local vs remote)
+  // Connection mode (local / remote / ssh)
   isRemoteMode: () => Promise<boolean>;
+  isRemoteOnlyMode: () => Promise<boolean>;
   getConnectionConfig: () => Promise<{
-    mode: "local" | "remote";
+    mode: "local" | "remote" | "ssh";
     remoteUrl: string;
     apiKey: string;
+    ssh: {
+      host: string;
+      port: number;
+      username: string;
+      keyPath: string;
+      remotePort: number;
+      localPort: number;
+    };
   }>;
   setConnectionConfig: (
-    mode: "local" | "remote",
+    mode: "local" | "remote" | "ssh",
     remoteUrl: string,
     apiKey?: string,
   ) => Promise<boolean>;
+  setSshConfig: (
+    host: string,
+    port: number,
+    username: string,
+    keyPath: string,
+    remotePort: number,
+    localPort: number,
+  ) => Promise<boolean>;
   testRemoteConnection: (url: string, apiKey?: string) => Promise<boolean>;
+  testSshConnection: (
+    host: string,
+    port: number,
+    username: string,
+    keyPath: string,
+    remotePort: number,
+  ) => Promise<boolean>;
+  isSshTunnelActive: () => Promise<boolean>;
+  startSshTunnel: () => Promise<boolean>;
+  stopSshTunnel: () => Promise<boolean>;
 
   // Chat
   sendMessage: (

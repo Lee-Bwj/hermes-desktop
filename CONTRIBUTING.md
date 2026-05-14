@@ -2,6 +2,11 @@
 
 Thanks for your interest in contributing to Hermes Desktop! Whether it's a bug fix, a new feature, improved docs, or just a typo — every contribution helps.
 
+## Languages
+
+- English: `CONTRIBUTING.md`
+- 简体中文: `CONTRIBUTING.zh-CN.md`
+
 ## Getting Started
 
 1. **Fork** the repository and clone your fork locally.
@@ -42,6 +47,15 @@ Thanks for your interest in contributing to Hermes Desktop! Whether it's a bug f
 2. Open a pull request against `main` on the upstream repo.
 3. Write a clear description of what you changed and why.
 4. If your PR addresses an open issue, reference it (e.g., `Fixes #42`).
+
+### Keep Pull Requests Small
+
+Please keep PRs small and focused — they are much easier to review and merge. PRs that touch too many files or bundle unrelated changes will likely be asked for splitting up or may not be accepted.
+
+- Stick to one logical change per PR (one fix, one feature, one refactor).
+- If you find yourself touching many unrelated files, split the work into multiple PRs.
+- Avoid bundling formatting/style sweeps with functional changes.
+- Smaller PRs get reviewed and merged faster.
 
 A maintainer will review your PR and may request changes. Once approved, it will be merged.
 
